@@ -1,0 +1,74 @@
+[
+  {
+    "query": "How do I install the Swift SDK for Android and build my package for an Android emulator?",
+    "should_trigger": true
+  },
+  {
+    "query": "My Android app crashes with: dlopen failed: library \"libswiftCore.so\" not found, after adding a Swift library.",
+    "should_trigger": true
+  },
+  {
+    "query": "We want to call a Swift library from our existing Kotlin app without Skip. How do I set up swift-java jextract?",
+    "should_trigger": true
+  },
+  {
+    "query": "Which .so files go into jniLibs for a Swift library, and do I need libc++_shared.so?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our APK grew by 60 MB after adding Swift. How do we shrink the Swift runtime on Android?",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I debug Swift code running on an Android device with LLDB?",
+    "should_trigger": true
+  },
+  {
+    "query": "swift build --swift-sdk fails for Android: which NDK and API level does the Swift SDK for Android need?",
+    "should_trigger": true
+  },
+  {
+    "query": "Symbolicate a Swift crash from an Android tombstone in logcat.",
+    "should_trigger": true
+  },
+  {
+    "query": "skip android emulator create and launch for my Skip app",
+    "should_trigger": false
+  },
+  {
+    "query": "Set up bridging options in skip.yml for my Skip Fuse module.",
+    "should_trigger": false
+  },
+  {
+    "query": "Our shared Swift view models should drive a native Compose UI. How do we split the Swift packages?",
+    "should_trigger": false
+  },
+  {
+    "query": "Install Android Studio and create an emulator for a Kotlin app.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a JNI function in C++ for my Android app.",
+    "should_trigger": false
+  },
+  {
+    "query": "Fix this SwiftUI layout bug on iPhone.",
+    "should_trigger": false
+  },
+  {
+    "query": "Add Material Symbols icons to my Skip app.",
+    "should_trigger": false
+  },
+  {
+    "query": "Kotlin coroutines or RxJava for a new Android app?",
+    "should_trigger": false
+  },
+  {
+    "query": "Port our React Native screens to SwiftUI for iOS.",
+    "should_trigger": false
+  },
+  {
+    "query": "Translate the Google Play store metadata of our Skip app with fastlane.",
+    "should_trigger": false
+  }
+]

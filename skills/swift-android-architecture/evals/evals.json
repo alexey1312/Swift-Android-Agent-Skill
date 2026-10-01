@@ -1,0 +1,104 @@
+{
+  "skill_name": "swift-android-architecture",
+  "evals": [
+    {
+      "id": 1,
+      "name": "route-for-existing-ios-app",
+      "prompt": "We're bringing TripNotes (evals/files/TripNotes) to Android. The Android team will build the UI natively in Kotlin with Jetpack Compose; we want to reuse as much Swift as we can. What can we share, what has to change first, and how would the Swift reach their app? Give me a plan — don't edit anything yet.",
+      "expected_output": "A plan with stable item IDs: share TripNotesKit as a Swift core compiled natively for Android (Skip native modules exported as AARs, or the bare SDK), after fixing what blocks it (FoundationNetworking import, Combine view model, @objc timer, print analytics); keep TripNotesUI (SwiftUI, MapKit, PassKit) on iOS behind protocols; every item sourced; Android not verified on this machine.",
+      "files": [
+        "evals/files/TripNotes"
+      ],
+      "expectations": [
+        "Recommends sharing the TripNotesKit target (models, API client, view model) under a native Kotlin/Compose UI, with the Swift compiled natively for Android (for example Skip native modules exported as AARs with `skip export`, or the Swift SDK for Android directly), and gives at least one trade-off against an alternative route.",
+        "Flags that APIClient.swift uses URLSession without importing FoundationNetworking, so it will not compile for Android, and proposes the conditional `#if canImport(FoundationNetworking)` import.",
+        "Keeps the MapKit map and the PassKit wallet button on the iOS side and proposes a platform protocol (or an equivalent boundary) for anything shared code needs from them, instead of moving them into shared code.",
+        "Plans to replace the Combine-based ObservableObject/@Published view model with an @Observable one and to keep Combine publishers out of what Kotlin sees (for example async functions or AsyncStream at the boundary).",
+        "Flags SyncScheduler's `@objc` method used through `#selector` as Objective-C runtime reliance that does not carry over to Android, and does not call subclassing NSObject by itself a blocker.",
+        "Presents the recommendations as items with stable IDs and asks which to apply before editing anything.",
+        "States that nothing was built or run for Android on this machine (or that Android needs an Android SDK build or CI to verify) instead of presenting the plan as verified.",
+        "No file in the project copy was modified."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "fuse-or-lite-new-app",
+      "prompt": "We're starting a new app with Skip for iOS and Android. The team writes Swift but nobody knows Kotlin; most of the app is business logic, and we'd like to use swift-crypto and a small C library. Should our modules be Skip Fuse or Skip Lite? Don't scaffold anything yet, just advise.",
+      "expected_output": "Fuse (native) for these modules, citing skip.dev's recommendation, tied to SwiftPM packages and C interop; honest costs (app size, debugging, build time); where Lite still wins; flags that Skip's own skills default to Lite; routes creation to Skip's tooling without running it.",
+      "files": [],
+      "expectations": [
+        "Recommends Skip Fuse (native mode) for this app's modules and cites skip.dev's own recommendation of native mode for most apps (its Modes or Project Types page).",
+        "Ties the recommendation to this team's needs: the full Swift language and SwiftPM packages such as swift-crypto, and C interop, which transpiled (Lite) modules cannot use the same way.",
+        "Names the costs of Fuse: a larger Android app because the Swift runtime ships with it, harder debugging, and slower builds.",
+        "Says where Lite still wins (for example ejectable Kotlin output, a smaller app, direct Kotlin/Java calls, or wrapping a platform service) instead of presenting Fuse as strictly better.",
+        "Flags that Skip's official agent skills tell agents to default to Lite, which conflicts with skip.dev's recommendation, or otherwise warns that a default-to-Lite rule should not be followed for this team.",
+        "Points project creation at Skip's tooling (`skip init` or `skip create` with the native option, or the skip-project-creation / skip-fuse skills) without running any scaffolding command."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "compose-never-updates",
+      "prompt": "In evals/files/PricingKit, the Compose WatchlistScreen never updates after the first frame even though PriceBoard.prices changes on the Swift side, and the Kotlin team says they can't collect priceUpdates in a coroutine. What's wrong and what should we change? Plan only.",
+      "expected_output": "Items with IDs: import SkipFuse where @Observable is used in this native module; replace the Combine publisher with an AsyncStream or async API; `#if !SKIP` compiles on Android so use `#if !os(Android)`; the six-parameter completion closure exceeds what Skip bridges; no edits.",
+      "files": [
+        "evals/files/PricingKit"
+      ],
+      "expectations": [
+        "Identifies that PriceBoard.swift uses @Observable in a Skip native (Fuse) module without `import SkipFuse` (it imports Observation instead), which keeps Compose from being notified, and proposes importing SkipFuse.",
+        "Explains that the Combine `AnyPublisher` in the public API is not something Kotlin can collect, and proposes exposing an AsyncStream/AsyncSequence (which Skip can bridge, for example to a Kotlin Flow with the kotlincompat option) or async functions instead.",
+        "Flags that the `#if !SKIP` block in a native module also compiles on Android and recommends `#if !os(Android)` (or `#if os(iOS)`) for iOS-only code.",
+        "Flags that the `quote` completion closure has more parameters than Skip bridges (more than five) and proposes a single result type or an async function instead.",
+        "Presents the recommendations as items with stable IDs and asks which to apply before editing anything.",
+        "No file in the project copy was modified."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "stale-viewmodel-in-compose",
+      "prompt": "Read evals/files/Ledger/README.md — QA found an Android-only bug with the ledger screen. Why does it happen only on Android, and what should we change? Plan only, no edits.",
+      "expected_output": "The NavHost caches one LedgerViewModel per account for the whole graph, so closed screens keep their Swift objects and socket listeners; Swift deinit is not a teardown hook on Android; create a view model per navigation entry and close it explicitly when the entry goes away; cite the Polymarket report or BSWInterfaceKit as an example; items with IDs.",
+      "files": [
+        "evals/files/Ledger"
+      ],
+      "expectations": [
+        "Explains that LedgerNavHost keeps one LedgerViewModel per account alive for the whole navigation graph (the `remember { mutableMapOf… }` cache), so closed screens keep their Swift view models and socket subscriptions, and reopened screens reuse stale state.",
+        "Explains that the Swift `deinit` that unsubscribes cannot be relied on as a teardown hook on Android, because when the bridged object is released is decided by Kotlin, Compose and the garbage collector, not by the screen closing.",
+        "Proposes a fresh view model per navigation entry or presentation, torn down explicitly when the screen leaves composition or its back-stack entry is destroyed (for example an explicit close or cancel method called from DisposableEffect or a ViewModel's onCleared), instead of relying on deinit.",
+        "Cites the Polymarket experience report on Swift Forums (stale data and zombie subscriptions under Compose, fixed with per-screen view model holders) or links an example such as BSWInterfaceKit's Skip helpers, without pasting its code.",
+        "Presents the recommendations as items with stable IDs and asks which to apply before editing anything.",
+        "No file in the project copy was modified."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "make-shared-target-android-ready",
+      "prompt": "evals/files/Notes has a NotesShared target that our Android app (Kotlin + Compose) is supposed to reuse, but it still depends on SwiftUI and Combine. Make NotesShared ready to share with Android without changing what the iOS app does. Go ahead.",
+      "expected_output": "NoteListViewModel becomes @Observable with no SwiftUI or Combine import, debounces with Swift Concurrency, and takes analytics as an injected protocol; NoteListView uses @State; the package builds on the host; the final message says Android was not built here.",
+      "files": [
+        "evals/files/Notes"
+      ],
+      "expectations": [
+        "NoteListViewModel uses the Observation framework (`@Observable`) instead of ObservableObject and @Published.",
+        "NoteListViewModel.swift no longer imports SwiftUI or Combine, and the search debounce uses Swift Concurrency (for example a Task with Task.sleep, or an AsyncStream) instead of a Combine pipeline.",
+        "The view model receives analytics through its initializer as a protocol (or a closure) instead of calling the printing Analytics.shared singleton.",
+        "The final message says the package was built or typechecked for Apple platforms here and that building for Android was not verified on this machine, naming how it would be verified (an Android SDK build or CI).",
+        "Ran a build or typecheck of the package after editing (for example `swift build`)."
+      ]
+    },
+    {
+      "id": 6,
+      "name": "platform-pay-boundary",
+      "prompt": "Our checkout flow is shared Swift code used by the iOS app (SwiftUI) and the Android app (Kotlin + Compose), built with Skip in native mode. Checkout needs Apple Pay on iOS and Google Pay on Android. How should we structure that? Plan only.",
+      "expected_output": "A shared Swift protocol for payments; PassKit in the iOS target and the Google Pay SDK in Kotlin; implementations injected at app startup; an async API shape; how the Kotlin implementation reaches Swift and that this bridging must be checked; a cited source.",
+      "files": [],
+      "expectations": [
+        "Defines payments as a Swift protocol (or an equivalent interface) in the shared module, with the shared checkout logic depending only on that protocol.",
+        "Implements it per platform: PassKit and Apple Pay in the iOS app target, the Google Pay SDK in Kotlin on Android, and keeps PassKit out of shared code.",
+        "Injects the platform implementation at app startup (for example from the iOS app or app delegate and from the Android Application class) instead of shared code looking it up or importing platform SDKs.",
+        "Uses an async API shape for the payment request (async/await on the Swift side) instead of nested completion closures, or explains why closures are harder to bridge to Kotlin.",
+        "Says how the Kotlin implementation reaches Swift (Skip bridging of the protocol) and that this must be checked against Skip's bridging documentation or a build, instead of assuming it works.",
+        "Cites a source for the pattern, such as the Polymarket report on Swift Forums or skip.dev's bridging documentation."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+# unzip -l app-release.apk (abbreviated), after adding the Swift checkout module.
+# Before the Swift module the APK was 14.9 MB.
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+  9811304  2026-09-20 10:02   classes.dex
+ 41943040  2026-09-20 10:02   lib/arm64-v8a/lib_FoundationICU.so
+ 10066329  2026-09-20 10:02   lib/arm64-v8a/libswiftCore.so
+  9227468  2026-09-20 10:02   lib/arm64-v8a/libFoundationEssentials.so
+  9122611  2026-09-20 10:02   lib/arm64-v8a/libFoundation.so
+  3984588  2026-09-20 10:02   lib/arm64-v8a/libFoundationInternationalization.so
+  1258291  2026-09-20 10:02   lib/arm64-v8a/libswift_Concurrency.so
+  1153433  2026-09-20 10:02   lib/arm64-v8a/libswift_StringProcessing.so
+   943718  2026-09-20 10:02   lib/arm64-v8a/libc++_shared.so
+   838860  2026-09-20 10:02   lib/arm64-v8a/libdispatch.so
+   524288  2026-09-20 10:02   lib/arm64-v8a/libswift_RegexParser.so
+   314572  2026-09-20 10:02   lib/arm64-v8a/libswiftObservation.so
+   209715  2026-09-20 10:02   lib/arm64-v8a/libBlocksRuntime.so
+  2516582  2026-09-20 10:02   lib/arm64-v8a/libShopCheckout.so
+  4718592  2026-09-20 10:02   resources.arsc
+---------                     -------
+ 96628391                     15 files (and assets)
+# The checkout module only parses JSON, formats prices for the user's locale and talks HTTPS.

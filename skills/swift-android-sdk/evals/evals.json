@@ -1,0 +1,69 @@
+{
+  "skill_name": "swift-android-sdk",
+  "evals": [
+    {
+      "id": 1,
+      "name": "dlopen-observation-crash",
+      "prompt": "Our Android app crashes on launch — see evals/files/WeatherCore/crash.txt. The Swift library is built by the Gradle task in evals/files/WeatherCore/android/app/build.gradle.kts. Fix it.",
+      "expected_output": "The Gradle build ships the Swift runtime (static linking, or copying the runtime .so files from the SDK) plus libc++_shared.so; the cause is explained; nothing is claimed verified on a device; remaining gaps named.",
+      "files": [
+        "evals/files/WeatherCore"
+      ],
+      "expectations": [
+        "build.gradle.kts now ships the Swift runtime the library needs — either it links the Swift standard library and Foundation statically (for example `--static-swift-stdlib`) or it copies the Swift runtime libraries (libswiftObservation.so among them) from the Swift SDK into jniLibs — and in both cases it also packages libc++_shared.so.",
+        "Explains the cause: only libWeatherCore.so was packaged, but it links against Swift runtime libraries (libswiftObservation.so among them) that the APK did not contain.",
+        "Does not claim the fix was verified on a device or emulator; says it was not run here and how to verify it (for example listing the APK's lib/ folder, or launching on an emulator in CI).",
+        "Names a remaining gap: other ABIs need their own copies of the libraries, or the Swift toolchain and the Swift SDK for Android must match exactly."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "call-swift-from-kotlin-without-skip",
+      "prompt": "Read evals/files/Compress/README.md. How do we let the Kotlin app call Compressor without Skip? Plan only.",
+      "expected_output": "swift-java jextract in JNI mode with its SwiftPM plugin and config; how async and the progress closure surface in Kotlin; per-ABI builds with the runtime and libc++_shared.so; R8 rules or the Java support library; swift-java's pre-1.0 stability, with a dated source.",
+      "files": [
+        "evals/files/Compress"
+      ],
+      "expectations": [
+        "Recommends generating the Java/Kotlin bindings with swift-java's jextract in JNI mode (not the FFM mode, which needs a newer JDK than Android provides), and names the SwiftPM plugin and the config file that selects JNI mode.",
+        "Explains how compressFile's async function and its progress closure come out on the Kotlin side (for example a CompletableFuture that Kotlin can await, and the limits on bridged closures).",
+        "Covers packaging: building the library for each Android ABI with the Swift SDK for Android and shipping the .so files with the Swift runtime (or static linking) and libc++_shared.so in the app's jniLibs.",
+        "Mentions R8/ProGuard keep rules for the generated Java classes, or swift-java's Java support library that the app must depend on.",
+        "Warns that swift-java has no API-stability guarantee before 1.0 (so pin a version), pointing at a dated source instead of asserting a version from memory.",
+        "No file in the project copy was modified."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "setup-swift-sdk",
+      "prompt": "Set up this Mac so I can build our Swift package for Android. What exactly do I need to install and run?",
+      "expected_output": "Check the current toolchain first; an open-source toolchain from swiftly that matches the SDK exactly; `swift sdk install` with the swift.org URL and checksum; the NDK and ANDROID_NDK_HOME, noting the docs disagree; the build command with an Android SDK and static stdlib; ask before installing.",
+      "files": [],
+      "expectations": [
+        "Checks the current state first (for example `swift --version`, `swift sdk list` and the NDK location, or the skill's toolchain report) before proposing installs.",
+        "Says the Swift SDK for Android needs an open-source Swift toolchain whose version matches the SDK exactly (installed with swiftly), not the toolchain inside Xcode.",
+        "Installs the SDK with `swift sdk install` from the swift.org download URL with its `--checksum`, taking the exact URL and checksum from swift.org or the skill's versions reference instead of inventing them.",
+        "Covers the Android NDK and pointing ANDROID_NDK_HOME at it, and notes that swift.org's getting-started article and the docs.swift.org guide disagree on the NDK or the command form (or says which source it followed and why).",
+        "Shows the build command with an Android Swift SDK or triple (`swift build --swift-sdk …`) including the static Swift standard library option.",
+        "Asks for approval before running any installer or download, instead of running them."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "apk-size",
+      "prompt": "Our Android APK grew from about 15 MB to almost 100 MB after we added the Swift checkout module — the listing is in evals/files/Shop/apk-contents.txt. What's taking the space and what can we do? Plan only.",
+      "expected_output": "ICU data and the Foundation/Swift runtime dominate, not the module; static linking with stripping and size flags (cite swift-java's guide or a dated report); FoundationEssentials where possible with the locale-formatting trade-off checked; per-ABI delivery; reported numbers kept apart from measurements.",
+      "files": [
+        "evals/files/Shop"
+      ],
+      "expectations": [
+        "Identifies the ICU data library (lib_FoundationICU.so) and the Foundation and Swift runtime libraries as most of the growth, not the app's own code (libShopCheckout.so).",
+        "Proposes linking the Swift runtime statically with stripping and dead-code elimination (and size-oriented flags such as -Osize or LTO), citing swift-java's binary-size guide or a dated report.",
+        "Proposes depending on FoundationEssentials instead of full Foundation where the module allows it, while noting that locale-aware price formatting needs internationalization and ICU data, so the trade-off has to be checked.",
+        "Mentions that per-ABI delivery (an Android App Bundle or ABI splits) means users download only one ABI's libraries.",
+        "Keeps reported figures apart from measurements: numbers from other projects are attributed and dated, and the plan says the savings must be measured on this APK.",
+        "No file in the project copy was modified."
+      ]
+    }
+  ]
+}

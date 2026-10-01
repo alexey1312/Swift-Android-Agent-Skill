@@ -1,0 +1,38 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Show the toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+      - name: Report what this machine can verify
+        run: python3 scripts/toolchain_report.py --format markdown >> "$GITHUB_STEP_SUMMARY"
+      - name: Compile Python
+        run: python3 -m compileall -q scripts skills tests
+      - name: Check the skill copies
+        run: python3 scripts/sync_skill_copies.py --check
+      - name: Run tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Typecheck every sample on Apple platforms
+        run: python3 scripts/typecheck_samples.py
+      - name: Test the shared-core sample on the host
+        run: swift test --package-path samples/SharedCore
+      - name: Validate metadata
+        run: |
+          python3 -m json.tool .claude-plugin/plugin.json >/dev/null
+          python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
+          python3 -m json.tool .cursor-plugin/plugin.json >/dev/null
+          python3 -m json.tool package.json >/dev/null

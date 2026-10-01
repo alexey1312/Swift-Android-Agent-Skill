@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+dist/
+*-workspace/
+evals/results/
+.build/
+.swiftpm/
+Package.resolved

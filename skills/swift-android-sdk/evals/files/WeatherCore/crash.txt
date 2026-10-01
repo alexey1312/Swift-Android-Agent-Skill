@@ -1,0 +1,7 @@
+--------- beginning of crash
+E AndroidRuntime: FATAL EXCEPTION: main
+E AndroidRuntime: Process: com.example.weather, PID: 8812
+E AndroidRuntime: java.lang.UnsatisfiedLinkError: dlopen failed: library "libswiftObservation.so" not found: needed by /data/app/~~Qe3/com.example.weather-1/lib/arm64/libWeatherCore.so in namespace clns-7
+E AndroidRuntime: 	at java.lang.Runtime.loadLibrary0(Runtime.java:1081)
+E AndroidRuntime: 	at java.lang.System.loadLibrary(System.java:1765)
+E AndroidRuntime: 	at com.example.weather.WeatherCore.<clinit>(WeatherCore.kt:6)

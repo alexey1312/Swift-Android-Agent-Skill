@@ -1,0 +1,15 @@
+{
+  "name": "swift-android-skills",
+  "version": "1.0.0",
+  "description": "Swift on Android: choosing the route, a shared Swift core under native Kotlin and Compose UI, and the Swift SDK for Android with swift-java.",
+  "author": {
+    "name": "Aleksei Kakoulin",
+    "email": "alexey1312ru@gmail.com"
+  },
+  "repository": "https://github.com/alexey1312/Swift-Android-Agent-Skill",
+  "license": "MIT",
+  "skills": [
+    "./skills/swift-android-architecture",
+    "./skills/swift-android-sdk"
+  ]
+}

@@ -1,0 +1,21 @@
+name: swift-android-skills
+version: "1.0.0"
+description: >-
+  Decide how Swift code reaches Android, share a Swift core under native Kotlin
+  and Jetpack Compose UI, and build with the Swift SDK for Android and
+  swift-java, using a read-only route-aware scanner and approval-gated changes.
+author:
+  name: Aleksei Kakoulin
+  email: alexey1312ru@gmail.com
+repository: https://github.com/alexey1312/Swift-Android-Agent-Skill
+license: MIT
+logo: assets/logo.svg
+keywords:
+  - swift
+  - android
+  - skip
+  - swift-java
+  - jetpack-compose
+skills:
+  - swift-android-architecture
+  - swift-android-sdk

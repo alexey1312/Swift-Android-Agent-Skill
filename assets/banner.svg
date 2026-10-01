@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 480" role="img" aria-labelledby="title desc">
+  <title id="title">Swift Android Agent Skills</title>
+  <desc id="desc">One Swift core shared by an iOS app and an Android app whose UI stays native.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="0.6" stop-color="#0f2a24"/>
+      <stop offset="1" stop-color="#065f46"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fb923c"/>
+      <stop offset="1" stop-color="#f05138"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="480" fill="url(#bg)"/>
+
+  <!-- Two native UIs, one shared Swift core between them -->
+  <g transform="translate(700 70)">
+    <g stroke-width="5" stroke-linecap="round" fill="none">
+      <path d="M150 170 C190 170 190 170 214 170" stroke="#e2e8f0" stroke-opacity="0.55" stroke-dasharray="2 12"/>
+      <path d="M306 170 C330 170 330 170 370 170" stroke="#3ddc84" stroke-opacity="0.8" stroke-dasharray="2 12"/>
+    </g>
+    <!-- iOS side -->
+    <rect x="0" y="20" width="150" height="300" rx="30" fill="url(#screen)" stroke="#e2e8f0" stroke-opacity="0.6" stroke-width="4"/>
+    <rect x="52" y="34" width="46" height="12" rx="6" fill="#e2e8f0" fill-opacity="0.5"/>
+    <g fill="#e2e8f0" fill-opacity="0.55">
+      <rect x="22" y="76" width="106" height="12" rx="6"/>
+      <rect x="22" y="104" width="80" height="10" rx="5" fill-opacity="0.3"/>
+      <rect x="22" y="134" width="106" height="12" rx="6"/>
+      <rect x="22" y="162" width="70" height="10" rx="5" fill-opacity="0.3"/>
+      <rect x="22" y="192" width="106" height="12" rx="6"/>
+      <rect x="22" y="220" width="88" height="10" rx="5" fill-opacity="0.3"/>
+    </g>
+    <text x="75" y="296" text-anchor="middle" fill="#e2e8f0" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="18" font-weight="600">SwiftUI</text>
+    <!-- Shared core -->
+    <rect x="214" y="124" width="92" height="92" rx="24" fill="url(#core)"/>
+    <text x="260" y="186" text-anchor="middle" fill="#ffffff" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="44" font-weight="700">{ }</text>
+    <text x="260" y="246" text-anchor="middle" fill="#fdba74" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="18" font-weight="600">Swift core</text>
+    <!-- Android side -->
+    <rect x="370" y="20" width="150" height="300" rx="22" fill="url(#screen)" stroke="#3ddc84" stroke-opacity="0.85" stroke-width="4"/>
+    <circle cx="445" cy="40" r="6" fill="#3ddc84" fill-opacity="0.7"/>
+    <g fill="#3ddc84" fill-opacity="0.6">
+      <rect x="392" y="76" width="106" height="12" rx="3"/>
+      <rect x="392" y="104" width="80" height="10" rx="3" fill-opacity="0.3"/>
+      <rect x="392" y="134" width="106" height="12" rx="3"/>
+      <rect x="392" y="162" width="70" height="10" rx="3" fill-opacity="0.3"/>
+      <rect x="392" y="192" width="106" height="12" rx="3"/>
+      <rect x="392" y="220" width="88" height="10" rx="3" fill-opacity="0.3"/>
+    </g>
+    <rect x="420" y="302" width="50" height="6" rx="3" fill="#3ddc84" fill-opacity="0.5"/>
+    <text x="445" y="284" text-anchor="middle" fill="#bbf7d0" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="18" font-weight="600">Compose</text>
+  </g>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Helvetica, Arial, sans-serif">
+    <text x="80" y="150" fill="#3ddc84" font-size="26" font-weight="600" letter-spacing="4">AGENT SKILLS</text>
+    <text x="80" y="222" fill="#ffffff" font-size="72" font-weight="700">Swift on Android</text>
+    <text x="80" y="282" fill="#cbd5e1" font-size="28">Share a Swift core under native UI,</text>
+    <text x="80" y="322" fill="#cbd5e1" font-size="28">next to Skip's official skills.</text>
+    <g font-size="22" font-weight="600" fill="#e2e8f0">
+      <rect x="80" y="362" width="118" height="44" rx="22" fill="#ffffff" fill-opacity="0.1"/>
+      <text x="139" y="391" text-anchor="middle">Cited</text>
+      <rect x="212" y="362" width="172" height="44" rx="22" fill="#ffffff" fill-opacity="0.1"/>
+      <text x="298" y="391" text-anchor="middle">Android CI</text>
+      <rect x="398" y="362" width="216" height="44" rx="22" fill="#ffffff" fill-opacity="0.1"/>
+      <text x="506" y="391" text-anchor="middle">Approval-gated</text>
+    </g>
+  </g>
+</svg>

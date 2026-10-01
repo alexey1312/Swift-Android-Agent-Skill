@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/marketplace/marketplace.schema.json",
+  "name": "swift-android-skills",
+  "version": "1.0.0",
+  "owner": {
+    "name": "Aleksei Kakoulin",
+    "email": "alexey1312ru@gmail.com"
+  },
+  "metadata": {
+    "description": "Cited, CI-checked guidance for sharing Swift code with Android apps, alongside Skip's official skills."
+  },
+  "plugins": [
+    {
+      "name": "swift-android-skills",
+      "description": "Decide how Swift reaches Android, share a Swift core under native Kotlin and Compose UI, and build with the Swift SDK for Android and swift-java — every claim cited or compiled for Android in CI.",
+      "repository": "https://github.com/alexey1312/Swift-Android-Agent-Skill",
+      "version": "1.0.0",
+      "author": {
+        "name": "Aleksei Kakoulin",
+        "email": "alexey1312ru@gmail.com"
+      },
+      "license": "MIT",
+      "category": "development",
+      "keywords": ["swift", "android", "skip", "swift-java", "jetpack-compose", "kotlin", "cross-platform"],
+      "tags": ["swift", "android", "skip", "agent-skill"],
+      "source": "./"
+    }
+  ]
+}

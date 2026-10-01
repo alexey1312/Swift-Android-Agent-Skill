@@ -1,0 +1,13 @@
+{
+  "name": "swift-android-agent-skill",
+  "private": true,
+  "description": "Agent Skills for sharing Swift code with Android apps.",
+  "license": "MIT",
+  "keywords": ["pi-package", "agent-skill", "swift", "android", "skip", "swift-java"],
+  "pi": {
+    "skills": [
+      "./skills/swift-android-architecture",
+      "./skills/swift-android-sdk"
+    ]
+  }
+}

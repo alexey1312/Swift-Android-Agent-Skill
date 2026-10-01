@@ -1,0 +1,248 @@
+name: Android
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  # Pinned in references/versions.md; the drift job reports when upstream moves.
+  SWIFT_VERSION: "6.4.0"
+  SWIFT_SDK_ID: swift-6.4.0-RELEASE_android
+
+jobs:
+  compile:
+    name: Compile (NDK ${{ matrix.ndk }}, ${{ matrix.arch }}, API ${{ matrix.api }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # The image-NDK rows ask whether swift.org's NDK r30 is really needed: they record, never block.
+    continue-on-error: ${{ matrix.record }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { ndk: r30, api: 28, arch: aarch64, record: false }
+          - { ndk: r30, api: 23, arch: aarch64, record: false }
+          - { ndk: r30, api: 28, arch: x86_64, record: false }
+          - { ndk: image-latest, api: 28, arch: aarch64, record: true }
+          - { ndk: image-default, api: 28, arch: aarch64, record: true }
+    env:
+      TRIPLE: ${{ matrix.arch }}-unknown-linux-android${{ matrix.api }}
+      ROW: ndk-${{ matrix.ndk }}-${{ matrix.arch }}-android${{ matrix.api }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # Install commands: swift.org's, verbatim, kept in this job only.
+      # https://www.swift.org/documentation/articles/swift-sdk-for-android-getting-started.html
+      # swiftly runs unattended as https://www.swift.org/swiftly/documentation/swiftly/automated-install shows.
+      - name: Install swiftly and Swift
+        working-directory: ${{ runner.temp }}
+        run: |
+          curl -fsSL -o swiftly.tar.gz "https://download.swift.org/swiftly/linux/swiftly-$(uname -m).tar.gz"
+          tar zxf swiftly.tar.gz
+          ./swiftly init --assume-yes --skip-install --no-modify-profile --quiet-shell-followup
+          . "${SWIFTLY_HOME_DIR:-$HOME/.local/share/swiftly}/env.sh"
+          hash -r
+          swiftly install "$SWIFT_VERSION" --use --assume-yes --post-install-file=post-install.sh
+          if [ -f post-install.sh ]; then sudo apt-get update -q && sudo bash post-install.sh; fi
+          echo "$SWIFTLY_BIN_DIR" >> "$GITHUB_PATH"
+          {
+            echo "SWIFTLY_HOME_DIR=$SWIFTLY_HOME_DIR"
+            echo "SWIFTLY_BIN_DIR=$SWIFTLY_BIN_DIR"
+            echo "SWIFTLY_TOOLCHAINS_DIR=$SWIFTLY_TOOLCHAINS_DIR"
+          } >> "$GITHUB_ENV"
+
+      - name: Install the Swift SDK for Android
+        run: |
+          swift sdk install https://download.swift.org/swift-6.4.0-release/android-sdk/swift-6.4.0-RELEASE/swift-6.4.0-RELEASE_android.artifactbundle.tar.gz --checksum 21fb555122a3d801ad943d48df7ebffdd8824de61c25c180bb792d3edaee0b43
+          swift sdk list
+
+      - name: Install the Android NDK r30
+        if: matrix.ndk == 'r30'
+        working-directory: ${{ runner.temp }}
+        run: |
+          curl -fSL -o ndk.zip https://dl.google.com/android/repository/android-ndk-r30-$(uname -s).zip
+          unzip -qo ndk.zip
+          export ANDROID_NDK_HOME=$PWD/android-ndk-r30
+          rm ndk.zip
+          # Swift Build reads ANDROID_NDK_ROOT before ANDROID_NDK_HOME, and the image presets both.
+          echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME" >> "$GITHUB_ENV"
+          echo "ANDROID_NDK_ROOT=$ANDROID_NDK_HOME" >> "$GITHUB_ENV"
+
+      - name: Use the image's NDK
+        if: matrix.ndk != 'r30'
+        env:
+          CHOICE: ${{ matrix.ndk }}
+        run: |
+          if [ "$CHOICE" = image-latest ]; then ndk="$ANDROID_NDK_LATEST_HOME"; else ndk="$ANDROID_NDK_HOME"; fi
+          echo "ANDROID_NDK_HOME=$ndk" >> "$GITHUB_ENV"
+          echo "ANDROID_NDK_ROOT=$ndk" >> "$GITHUB_ENV"
+
+      - name: Show the toolchain
+        id: toolchain
+        run: |
+          swift --version
+          swift sdk list
+          grep -E '^Pkg\.(Revision|ReleaseName)' "$ANDROID_NDK_HOME/source.properties"
+          {
+            echo "## $ROW"
+            echo
+            echo "Runner image \`$ImageOS $ImageVersion\`, Swift SDK \`$SWIFT_SDK_ID\`, triple \`$TRIPLE\`."
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+          python3 scripts/toolchain_report.py --format markdown >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Run the compile probes
+        id: probes
+        if: ${{ !cancelled() && steps.toolchain.outcome == 'success' }}
+        run: |
+          python3 scripts/android_probes.py --swift "$(which swift)" --swift-sdk "$SWIFT_SDK_ID" \
+            --triple "$TRIPLE" --json "probes-$ROW.json" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Compile the references' shared samples for Android
+        id: samples
+        if: ${{ !cancelled() && steps.toolchain.outcome == 'success' }}
+        run: python3 scripts/typecheck_samples.py --android --swift "$(which swift)" --swift-sdk "$SWIFT_SDK_ID" --triple "$TRIPLE"
+
+      - name: Build SharedCore and its tests for Android
+        id: sharedcore
+        if: ${{ !cancelled() && steps.toolchain.outcome == 'success' }}
+        run: swift build --package-path samples/SharedCore --build-tests --swift-sdk "$SWIFT_SDK_ID" --triple "$TRIPLE"
+
+      # The article's own end-to-end check, verbatim; it links executables against this row's NDK.
+      - name: Build swift.org's Hello World for Android
+        id: hello
+        if: ${{ !cancelled() && steps.toolchain.outcome == 'success' }}
+        run: |
+          cd /tmp
+          mkdir hello
+          cd hello
+          swift package init --type executable
+          swift build
+          .build/debug/hello
+          swift build --swift-sdk swift-6.4.0-RELEASE_android --triple x86_64-unknown-linux-android23 --static-swift-stdlib
+          file .build/x86_64-unknown-linux-android23/debug/hello
+          swift build --swift-sdk swift-6.4.0-RELEASE_android --triple aarch64-unknown-linux-android23 --static-swift-stdlib
+          file .build/aarch64-unknown-linux-android23/debug/hello
+
+      # docs.swift.org and swift-android-action still select the SDK by triple alone, without running
+      # setup-android-sdk.sh here first; this records whether that older form still builds.
+      - name: Record the older --swift-sdk <triple> selector
+        id: selector
+        if: ${{ !cancelled() && steps.toolchain.outcome == 'success' }}
+        run: |
+          if swift build --package-path samples/SharedCore --swift-sdk "$TRIPLE" \
+              --scratch-path "$RUNNER_TEMP/triple-selector" > "selector-$ROW.log" 2>&1; then
+            result=pass
+          else
+            result=fail
+            tail -n 20 "selector-$ROW.log"
+          fi
+          echo "result=$result" >> "$GITHUB_OUTPUT"
+          echo "Older selector \`--swift-sdk $TRIPLE\`, no setup script: **$result**." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the probe results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: probes-${{ env.ROW }}
+          path: |
+            probes-${{ env.ROW }}.json
+            selector-${{ env.ROW }}.log
+          if-no-files-found: warn
+
+      - name: Summarize
+        if: always()
+        env:
+          PROBES: ${{ steps.probes.outcome }}
+          SAMPLES: ${{ steps.samples.outcome }}
+          SHARED_CORE: ${{ steps.sharedcore.outcome }}
+          HELLO: ${{ steps.hello.outcome }}
+          SELECTOR: ${{ steps.selector.outputs.result }}
+        run: |
+          ndk="$(grep -h '^Pkg.Revision' "${ANDROID_NDK_ROOT:-/nonexistent}/source.properties" 2>/dev/null | cut -d= -f2 | tr -d ' ' || true)"
+          swift_line="$(swift --version 2>/dev/null | sed -n 1p || true)"
+          {
+            echo "### Recap: $ROW"
+            echo
+            echo "| Item | Value |"
+            echo "| --- | --- |"
+            echo "| Run | $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID |"
+            echo "| Date (UTC) | $(date -u +%Y-%m-%d) |"
+            echo "| Runner image | $ImageOS $ImageVersion |"
+            echo "| Swift | ${swift_line:-unknown} |"
+            echo "| Swift SDK, triple | $SWIFT_SDK_ID, $TRIPLE |"
+            echo "| NDK (ANDROID_NDK_ROOT) | ${ndk:-unknown} |"
+            echo "| Probes | ${PROBES:-skipped} |"
+            echo "| Shared samples | ${SAMPLES:-skipped} |"
+            echo "| SharedCore build | ${SHARED_CORE:-skipped} |"
+            echo "| swift.org Hello World | ${HELLO:-skipped} |"
+            echo "| Older selector | ${SELECTOR:-skipped} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  emulator:
+    name: Emulator (SharedCore tests, API 28)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      # The action installs its own toolchain and SDK, selects the SDK by triple, runs the
+      # bundle's setup script and uses the image's NDK; the image-NDK compile rows cover that NDK.
+      # Fallback if it stops working: the official reusable workflow, called as a job:
+      #   uses: swiftlang/github-workflows/.github/workflows/swift_package_test.yml@fa1e46cf0f07ffde2de131e9ed5bd66a488c289c
+      #   with: enable_android_sdk_build: true, enable_android_sdk_checks: true,
+      #         enable_linux_checks: false, enable_windows_checks: false,
+      #         android_sdk_versions: '["6.4"]', android_ndk_versions: '["r30"]',
+      #         android_sdk_build_command: swift build --package-path samples/SharedCore
+      # It has no package-path input of its own.
+      - name: Build and test SharedCore on an Android emulator
+        uses: skiptools/swift-android-action@2044b79660f201ccef8cbce62877e4ec5409f9c8 # v2.9.5
+        with:
+          package-path: samples/SharedCore
+          swift-version: ${{ env.SWIFT_VERSION }}
+          android-api-level: 28
+          build-tests: true
+          run-tests: true
+          free-disk-space: true
+
+      - name: Summarize
+        if: always()
+        env:
+          OUTCOME: ${{ job.status }}
+        run: |
+          {
+            echo "## Emulator: SharedCore tests"
+            echo
+            echo "Swift \`$SWIFT_VERSION\` through skiptools/swift-android-action, API 28,"
+            echo "runner image \`$ImageOS $ImageVersion\`, NDK \`${ANDROID_NDK_HOME:-unknown}\`: **$OUTCOME**."
+            echo "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  drift:
+    name: Version drift
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Compare the pins with the latest releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/versions_check.py | tee -a "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,74 @@
+[
+  {
+    "query": "We have a big iOS app in Swift and want our Android app to reuse the models, networking and view models while the Android UI stays Jetpack Compose. How should we structure the code?",
+    "should_trigger": true
+  },
+  {
+    "query": "Should we go with Skip Fuse or Skip Lite for a new cross-platform app? Our team only knows Swift.",
+    "should_trigger": true
+  },
+  {
+    "query": "Our Compose screen doesn't refresh when the @Observable model changes in our Skip native module. Why?",
+    "should_trigger": true
+  },
+  {
+    "query": "Audit this Swift package and tell me what would stop it compiling for Android.",
+    "should_trigger": true
+  },
+  {
+    "query": "The Kotlin team can't consume the Combine publishers from our shared Swift module. What should the API look like instead?",
+    "should_trigger": true
+  },
+  {
+    "query": "On Android our Swift view models keep their websocket subscriptions after the screen closes, and reopened screens show stale data. iOS is fine.",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I give shared Swift checkout logic Apple Pay on iOS and Google Pay on Android?",
+    "should_trigger": true
+  },
+  {
+    "query": "We ship our Swift modules into an existing Android app as AARs with skip export. How should Gradle and CI be set up so shared code never breaks the Android build?",
+    "should_trigger": true
+  },
+  {
+    "query": "skip init a new app called Cookbook with the app id com.example.cookbook",
+    "should_trigger": false
+  },
+  {
+    "query": "In my Skip app, replace Image(systemName: \"star\") with a Material Symbols icon.",
+    "should_trigger": false
+  },
+  {
+    "query": "Translate our Skip app's Localizable.xcstrings into German and French.",
+    "should_trigger": false
+  },
+  {
+    "query": "My Maestro flow can't find the Save button on Android in our Skip app.",
+    "should_trigger": false
+  },
+  {
+    "query": "Sign the Android release of our Skip app and upload it to Google Play with fastlane.",
+    "should_trigger": false
+  },
+  {
+    "query": "XCSkipTests fails with a Kotlin error comparing a Double with an Int in transpiled code.",
+    "should_trigger": false
+  },
+  {
+    "query": "Build the settings screen of my SwiftUI iPhone app with @Observable and NavigationStack.",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I install the Swift SDK for Android and the NDK on my Mac?",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a Kotlin ViewModel with StateFlow for a Jetpack Compose list screen.",
+    "should_trigger": false
+  },
+  {
+    "query": "Should we use Kotlin Multiplatform or Flutter for our next app?",
+    "should_trigger": false
+  }
+]

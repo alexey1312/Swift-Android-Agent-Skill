@@ -1,0 +1,86 @@
+{
+  "urlsession-without-foundationnetworking": {
+    "question": "Does URLSession resolve on Android with only `import Foundation`?",
+    "expect": "fail",
+    "error_contains": "'URLSession'",
+    "twin": "urlsession-with-ladder",
+    "source": "https://skip.dev/blog/android-native-swift-packages/"
+  },
+  "urlsession-with-ladder": {
+    "question": "Does URLSession resolve on Android behind `#if canImport(FoundationNetworking)`?",
+    "expect": "pass",
+    "error_contains": null,
+    "twin": "urlsession-without-foundationnetworking",
+    "source": "https://docs.swift.org/latest/documentation/swiftandroid/buildingforandroid"
+  },
+  "uikit-import": {
+    "question": "Does `import UIKit` build for Android?",
+    "expect": "fail",
+    "error_contains": "'UIKit'",
+    "twin": null,
+    "source": "https://github.com/swiftlang/swift-evolution/blob/807b844be42db582e434d1667fc907ae7a7a8775/visions/android.md#non-goals"
+  },
+  "swiftui-import": {
+    "question": "Does `import SwiftUI` build for Android?",
+    "expect": "fail",
+    "error_contains": "'SwiftUI'",
+    "twin": null,
+    "source": "https://github.com/swiftlang/swift-evolution/blob/807b844be42db582e434d1667fc907ae7a7a8775/visions/android.md#non-goals"
+  },
+  "combine-import": {
+    "question": "Does `import Combine` build for Android?",
+    "expect": "record",
+    "error_contains": null,
+    "twin": "observation",
+    "source": "https://www.swift.org/blog/exploring-the-swift-sdk-for-android/"
+  },
+  "observation": {
+    "question": "Does an `@Observable` class build for Android?",
+    "expect": "pass",
+    "error_contains": null,
+    "twin": "combine-import",
+    "source": "https://github.com/swiftlang/swift-android-examples/blob/92a181a10af2e8b50b05783035d3ae1cc98326da/hello-swift-java/README.md#crash-library-not-found"
+  },
+  "objc-selector": {
+    "question": "Do `@objc` and `#selector` build for Android?",
+    "expect": "fail",
+    "error_contains": "Objective-C",
+    "twin": "nsobject-subclass",
+    "source": "https://github.com/swiftlang/swift/blob/swift-6.4.0-RELEASE/lib/Frontend/CompilerInvocation.cpp#L1652-L1654"
+  },
+  "nsobject-subclass": {
+    "question": "Does a plain `NSObject` subclass, without `@objc`, build for Android?",
+    "expect": "record",
+    "error_contains": null,
+    "twin": "objc-selector",
+    "source": "https://github.com/swiftlang/swift-corelibs-foundation/blob/swift-6.4.0-RELEASE/README.md"
+  },
+  "darwin-import": {
+    "question": "Does `import Darwin` build for Android?",
+    "expect": "fail",
+    "error_contains": "'Darwin'",
+    "twin": "libc-ladder",
+    "source": "https://skip.dev/blog/android-native-swift-packages/"
+  },
+  "libc-ladder": {
+    "question": "Does the `canImport(Darwin)` / `canImport(Android)` / `canImport(Glibc)` ladder build for Android?",
+    "expect": "pass",
+    "error_contains": null,
+    "twin": "darwin-import",
+    "source": "https://docs.swift.org/latest/documentation/swiftandroid/portingpackages"
+  },
+  "oslog-import": {
+    "question": "Does `import OSLog` with a `Logger` build for Android without Skip?",
+    "expect": "record",
+    "error_contains": null,
+    "twin": null,
+    "source": "https://skip.dev/blog/shared-swift-model/"
+  },
+  "dispatch-main": {
+    "question": "Does `DispatchQueue.main.async` build for Android?",
+    "expect": "record",
+    "error_contains": null,
+    "twin": null,
+    "source": "https://www.swift.org/blog/exploring-the-swift-sdk-for-android/"
+  }
+}
