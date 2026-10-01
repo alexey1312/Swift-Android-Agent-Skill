@@ -30,7 +30,8 @@ public func makeRequest(to url: URL) -> URLRequest {
 ```
 
 "Foundation networking types require a separate import on non-Apple platforms" (docs.swift.org › Building for Android).
-Without it, the error is about `URLSession` lacking `shared`, which hides the cause (skip.dev › Porting).
+Without it, the error is about `URLSession` lacking `shared`, which hides the cause (skip.dev › Porting):
+`type 'URLSession' (aka 'AnyObject') has no member 'shared'` (*Measured* M3).
 Depending on `FoundationEssentials` alone, where the code allows it, also leaves out the ICU data (`size-and-debugging.md`).
 
 ## The C library
@@ -85,6 +86,7 @@ do not exist on Android (skip.dev › Porting; skip.dev › FAQ).
 Wrap optional uses in `#if canImport(<Module>)`,
 and move required ones behind a protocol implemented per platform.
 For Combine, skip.dev points to OpenCombine.
+`import UIKit`, `import SwiftUI`, `import Combine` and `import Darwin` all fail with "no such module" (*Measured* M3).
 
 ## No Objective-C runtime
 
@@ -109,7 +111,8 @@ and below API 24 `FILE*` imports differently (`versions.md`).
 - `print` writes to standard output, which Android does not show in Logcat
   (skip.dev › FAQ; skip.dev › Debugging).
 - In Skip modules, `OSLog.Logger` is forwarded to Logcat.
-- Without Skip, log through Android's logging library from the NDK,
+- Without Skip there is no `OSLog` module at all: `import OSLog` fails with "no such module" (*Measured* M3).
+  Log through Android's logging library from the NDK,
   or a logging package with a Logcat backend;
   check what your SDK's `Android` module exposes before relying on it (*inference*).
 
@@ -117,5 +120,6 @@ and below API 24 `FILE*` imports differently (`versions.md`).
 
 Nothing in the Swift or Skip documentation says how `@MainActor` or `DispatchQueue.main`
 relate to Android's main (Looper) thread, or which thread a JNI call arrives on (`sources.md`).
+`DispatchQueue.main.async` compiles for Android (*Measured* M3); that says nothing about which thread runs it.
 Do not assume that Swift's main actor is Android's UI thread;
 hand results to the UI through the Java/Kotlin side's own main-thread mechanism (*inference*).

@@ -95,4 +95,8 @@ unzip -l app/build/outputs/apk/release/app-release.apk 'lib/*'
 The Swift runtime is built against one NDK's C++ runtime, and the app ships another's `libc++_shared.so`.
 Runtime maintainers call a static runtime that works with mismatched NDKs unsafe in principle (post 1 of the thread above);
 Skip's maintainer reports mixing SDKs built with NDK 27 or 28 and `libc++_shared.so` from NDK 28 to 30 without a C++ problem (post 7).
-Use the NDK the SDK was built with when you can (`versions.md`).
+For static linking it is not optional:
+with the 6.4.0 SDK, NDK 27.3 and 29.0 failed to link a `--static-swift-stdlib` executable
+(`undefined symbol: std::__ndk1::__hash_memory`, from the SDK's static `libswiftCore.a`),
+while NDK r30, the one it was built with, linked it (*Measured* M5).
+Build and package with the NDK the SDK names (`versions.md`).

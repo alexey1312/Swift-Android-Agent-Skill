@@ -96,7 +96,8 @@ FILE_CHECKS: dict[str, list[tuple[str, str, str]]] = {
         ("Notes/Sources/NotesShared/NoteListViewModel.swift", r"@Observable", "contains"),
         ("Notes/Sources/NotesShared/NoteListViewModel.swift",
          r"import\s+(?:SwiftUI|UIKit|Combine)\b", "not_contains"),
-        ("Notes/Sources/NotesShared/NoteListViewModel.swift", r"Analytics\.shared", "not_contains"),
+        # Calls through the singleton are gone; a default argument that names it is still injection.
+        ("Notes/Sources/NotesShared/NoteListViewModel.swift", r"Analytics\.shared\.track", "not_contains"),
     ],
     "dlopen-observation-crash": [
         # The Swift runtime reaches the APK: linked statically, or its libraries copied next to the app's.

@@ -184,7 +184,7 @@ class SourceRuleTests(unittest.TestCase):
         measured = (ROOT / "references" / "measured-behavior.md").read_text(encoding="utf-8")
         sections = {}
         for match in re.finditer(r"^## (M\d+)\b.*?(?=^## |\Z)", measured, re.S | re.M):
-            sections[match.group(1)] = "Status: measured" in match.group(0)
+            sections[match.group(1)] = re.search(r"Status:\**\s*measured", match.group(0)) is not None
         claim = re.compile(r"\*Measured\* (M\d+)|Measured: (M\d+)")
         documents = [*(ROOT / "skills").rglob("*.md"), *(ROOT / "references").glob("*.md"), ROOT / "CHECKS.md",
                      ROOT / "README.md", ROOT / "scripts" / "android_scan.py"]

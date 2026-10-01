@@ -71,6 +71,8 @@ G_OBJC_INTEROP = "GitHub › swiftlang/swift lib/Frontend/CompilerInvocation.cpp
 G_SKIPSTONE_WARNING = "GitHub › skiptools/skipstone Sources/SkipSyntax/Kotlin/KotlinMessage.swift"
 G_SKIPSTONE_UI_IMPORTS = "GitHub › skiptools/skipstone Sources/SkipSyntax/Kotlin/KotlinBridgeToKotlinVisitor.swift"
 G_SKIPSTONE_MODE = "GitHub › skiptools/skipstone Sources/SkipBuild/Commands/SkipstoneCommand.swift"
+# Compile probes this repository ran for Android in CI (references/measured-behavior.md).
+M_PROBES = "Measured: M3"
 
 
 @dataclass(frozen=True)
@@ -99,7 +101,7 @@ RULES: dict[str, Rule] = {
             severity="high",
             scope="shared",
             skill=ARCHITECTURE,
-            source=f"{S_POLYMARKET}; {S_PORTING}; {S_FAQ}",
+            source=f"{S_POLYMARKET}; {S_PORTING}; {S_FAQ}; {M_PROBES}",
             fix=(
                 "Android has no UIKit, AppKit or WatchKit, and SwiftUI exists there only in a Skip UI "
                 "module (one that depends on SkipFuseUI or SkipUI). Move the view code to the iOS target "
@@ -129,7 +131,7 @@ RULES: dict[str, Rule] = {
             severity="high",
             scope="shared",
             skill=ARCHITECTURE,
-            source=f"{S_FAQ}; {S_POLYMARKET}; {S_SKIPMODEL}",
+            source=f"{S_FAQ}; {S_POLYMARKET}; {S_SKIPMODEL}; {M_PROBES}",
             fix=(
                 "Combine is not available to Swift compiled for Android (Skip Fuse or the bare SDK), so this "
                 "import does not compile there. Move to Swift Concurrency (async functions, `AsyncStream`) "
@@ -162,7 +164,7 @@ RULES: dict[str, Rule] = {
             severity="high",
             scope="native",
             skill=SDK,
-            source=f"{D_BUILDING}; {S_PORTING}",
+            source=f"{D_BUILDING}; {S_PORTING}; {M_PROBES}",
             fix=(
                 "Outside Apple platforms `URLSession`, `URLRequest`, `HTTPURLResponse` and the other "
                 "networking types live in `FoundationNetworking`, not `Foundation`. Add "
@@ -176,7 +178,7 @@ RULES: dict[str, Rule] = {
             severity="medium",
             scope="native",
             skill=SDK,
-            source=f"{D_PORTING}; {S_PORTING}",
+            source=f"{D_PORTING}; {S_PORTING}; {M_PROBES}",
             fix=(
                 "Android's C library module is `Android`, not `Darwin` or `Glibc`. Use a `canImport` ladder "
                 "with an Android branch (`#if canImport(Darwin)` … `#elseif canImport(Android)` / "
@@ -205,7 +207,7 @@ RULES: dict[str, Rule] = {
             severity="high",
             scope="native",
             skill=SDK,
-            source=f"{G_CORELIBS}; {G_OBJC_INTEROP}",
+            source=f"{G_CORELIBS}; {G_OBJC_INTEROP}; {M_PROBES}",
             fix=(
                 "The Swift compiler enables Objective-C interop only for Darwin targets, and Foundation "
                 "outside Apple platforms (swift-corelibs-foundation) is built for platforms with no "

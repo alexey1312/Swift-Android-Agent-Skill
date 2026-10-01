@@ -134,7 +134,8 @@ python3 scripts/android_scan.py <project-root> --route shared-core --format json
 - Migrate `ObservableObject` and `@Published` one screen at a time.
 - Keep Combine out of anything Kotlin sees:
   expose `async` functions and `AsyncStream` instead (rule `AND011`).
-- `samples/SharedCore` holds a tested version of this pattern.
+- `samples/SharedCore` holds a tested version of this pattern;
+  its tests pass on an Android emulator (*Measured* M4).
 
 ## 5. Crossing to Kotlin
 

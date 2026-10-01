@@ -797,7 +797,17 @@ class RuleMetadataTests(unittest.TestCase):
         for rule in android_scan.RULES.values():
             with self.subTest(rule.id):
                 self.assertRegex(rule.source, SOURCE)
-                self.assertNotIn("Measured:", rule.source)
+
+    def test_measured_sources_name_measured_sections(self) -> None:
+        measured = (ROOT / "references" / "measured-behavior.md").read_text(encoding="utf-8")
+        status = {
+            match.group(1): re.search(r"Status:\**\s*measured", match.group(0)) is not None
+            for match in re.finditer(r"^## (M\d+)\b.*?(?=^## |\Z)", measured, re.S | re.M)
+        }
+        for rule in android_scan.RULES.values():
+            for section in re.findall(r"Measured: (M\d+)", rule.source):
+                with self.subTest(rule=rule.id, section=section):
+                    self.assertTrue(status.get(section), f"{section} is not marked measured")
 
     def test_every_rule_names_a_skill_and_valid_severities(self) -> None:
         for rule in android_scan.RULES.values():

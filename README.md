@@ -52,6 +52,16 @@ runs compile probes behind the scanner's rules,
 and runs the tests of [`samples/SharedCore`](samples/SharedCore) on an Android emulator.
 Its results are recorded in [`measured-behavior.md`](references/measured-behavior.md),
 and only those count as *measured*.
+The first run (Swift 6.4.0, 2026-10-01) found, among other things:
+
+- swift.org's install commands work as published, and the sample's 15 tests pass on an Android emulator,
+  `withObservationTracking`, stream cancellation and ICU formatting included;
+- the NDKs that GitHub's runner images ship compile Swift libraries,
+  but cannot link the static Swift runtime — only the NDK the SDK was built with can;
+- `import Combine`, `import OSLog` and `import UIKit` fail with "no such module",
+  `@objc` with "Objective-C interoperability is disabled",
+  and a missing `FoundationNetworking` import surfaces as `URLSession` having no member `shared` —
+  while a plain `NSObject` subclass and `DispatchQueue.main` compile.
 
 **Not measured here:** Skip's bridging and `skip export`, Compose recomposition,
 garbage-collection timing, Android Studio, and app size on a device.

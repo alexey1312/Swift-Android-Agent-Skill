@@ -69,6 +69,8 @@ and for failures underneath a Skip Fuse build.
 - The Android NDK provides the linker and system libraries;
   which NDK release the SDK expects, and how the build finds it,
   changed between releases (`references/sdk-setup.md`).
+  Use the release the SDK was built with: with older NDKs, linking the static Swift runtime failed
+  on an undefined C++ library symbol (*Measured* M5).
 - Check first: `python3 scripts/toolchain_report.py` reports the host toolchain, installed SDKs,
   the NDK, Java and `adb`, and whether this machine can build or run anything for Android.
 

@@ -13,8 +13,9 @@ and records what it measured in `measured-behavior.md`.
 - macOS on Apple silicon cannot run it (no nested virtualization),
   so `macos-latest` can only build; tests need `ubuntu-latest` or an Intel macOS image
   (swift-android-action README).
-- No GitHub-hosted image ships NDK r30, which swift.org's 6.4 article asks for;
-  download it in the job or use the image's NDK and say which (`versions.md`).
+- No GitHub-hosted image ships NDK r30, which swift.org's 6.4 article asks for.
+  With the image's NDKs, libraries compiled but static executables failed to link (`measured-behavior.md` M5);
+  download r30 in the job, as this repository's `compile` job does, and set both `ANDROID_NDK_HOME` and `ANDROID_NDK_ROOT`.
 
 ## A Swift package, without Skip
 
@@ -29,7 +30,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: skiptools/swift-android-action@2044b79660f201ccef8cbce62877e4ec5409f9c8 # v2.9.5
         with:
-          swift-version: "6.4.0"     # quote versions; the default "latest" was never tested by v2.9.5
+          swift-version: "6.4.0"     # quote versions; this pin built and tested on 2026-10-01 (M4)
           android-api-level: 28
           free-disk-space: true      # the emulator fails to install on a full disk
           package-path: .

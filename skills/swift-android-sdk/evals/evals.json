@@ -13,7 +13,7 @@
         "build.gradle.kts now ships the Swift runtime the library needs — either it links the Swift standard library and Foundation statically (for example `--static-swift-stdlib`) or it copies the Swift runtime libraries (libswiftObservation.so among them) from the Swift SDK into jniLibs — and in both cases it also packages libc++_shared.so.",
         "Explains the cause: only libWeatherCore.so was packaged, but it links against Swift runtime libraries (libswiftObservation.so among them) that the APK did not contain.",
         "Does not claim the fix was verified on a device or emulator; says it was not run here and how to verify it (for example listing the APK's lib/ folder, or launching on an emulator in CI).",
-        "Names a remaining gap: other ABIs need their own copies of the libraries, or the Swift toolchain and the Swift SDK for Android must match exactly."
+        "Names a remaining risk: the NDK that links the runtime and supplies libc++_shared.so should be the one the Swift SDK was built with, other ABIs need their own libraries, or the Swift toolchain and the Swift SDK for Android must match exactly."
       ]
     },
     {

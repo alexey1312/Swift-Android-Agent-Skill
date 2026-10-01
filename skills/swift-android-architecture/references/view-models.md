@@ -84,8 +84,8 @@ public final class SettingsViewModel {
   the view model only decides *that* something happens next.
 - The Polymarket report builds every view model on a small shared base class;
   a protocol or plain composition works as well (*inference*).
-- `samples/SharedCore` in this skill's repository holds a tested version of this shape,
-  compiled for Android and tested on an emulator in CI (`measured-behavior.md`).
+- `samples/SharedCore` in this skill's repository holds a tested version of this shape;
+  its tests pass on an Android emulator, observation tracking included (*Measured* M4).
 
 ## Rendering the same instance three ways
 

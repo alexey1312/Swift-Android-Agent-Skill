@@ -64,11 +64,16 @@ the official examples and swift-android-action, used an older recipe:
 - selecting the SDK by triple: `swift build --swift-sdk aarch64-unknown-linux-android28 --static-swift-stdlib`.
 
 The 6.4 release post says Swift Build "now supports Android in SwiftPM as well, removing the need for a post-install script".
-The 6.4.0 bundle still ships the script,
-and the per-triple SDK ids still point at the `ndk-sysroot` directory only the script creates —
-so the older selector most likely still needs it (*inference*, `versions.md`).
-Follow the article; when a guide disagrees, say which one you followed.
-What this repository's CI measured about both forms, and about NDK releases, is in `measured-behavior.md` (M1, M5).
+This repository's CI measured both forms with the 6.4.0 SDK (`measured-behavior.md` M1, M5):
+
+- the article's commands, with NDK r30, built and linked everything, including static executables at API 23;
+- the older selector compiled a library without running the setup script
+  (linking through it was not measured);
+- with the NDKs a runner image ships (27.3, 29.0), libraries compiled,
+  but linking a `--static-swift-stdlib` executable failed with an undefined libc++ symbol (`std::__ndk1::__hash_memory`):
+  the static runtime needs the NDK the SDK was built with.
+
+Follow the article and its NDK; when a guide disagrees, say which one you followed.
 
 ## Architectures and API levels
 
