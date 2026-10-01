@@ -161,7 +161,8 @@ and for failures underneath a Skip Fuse build.
 ### Phase 2 — Apply and verify
 
 1. Apply approved items only; change only what they name.
-2. Build for the host, then for Android if `toolchain_report.py` says this machine can.
+2. Build for the host, then for Android if `toolchain_report.py` says this machine can;
+   where a sandbox blocks `swift build`, fall back to `swiftc -typecheck` and say so.
 3. Check the packaged libraries; run on an emulator or a device only where one is available.
 4. Update each item's status and hand back the report, with what was *not verified*.
 

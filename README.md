@@ -206,6 +206,22 @@ samples/SharedCore/   a tested shared core, built for Android and tested on an e
 scripts/              scanner, toolchain report, sample checks, Android probes, eval staging, packaging
 ```
 
+## Benchmark
+
+Ten cases, three runs each, with Skip's official skills installed in both stages —
+because that is how these skills are meant to be used
+([`benchmarks/2026-10-01`](benchmarks/2026-10-01/README.md)):
+
+| | Skip's skills only | Skip's skills + these |
+| --- | --- | --- |
+| Mean score | 0.515 | **0.885** |
+| Runs passing every criterion | 0 of 30 | 17 of 28 graded |
+
+The gains are where Skip's skills say nothing:
+Combine at the Kotlin boundary, Compose lifetimes, platform services, packaging the runtime, swift-java.
+On a plain "Fuse or Lite?" prompt Skip's own `skip-fuse` answers and these skills do not load;
+the write-up lists that, two ungraded runs, and every judge error before you cite a number.
+
 ## This skill's approach
 
 - **Grounded:** every recommendation cites skip.dev, swift.org, docs.swift.org, swift-java,

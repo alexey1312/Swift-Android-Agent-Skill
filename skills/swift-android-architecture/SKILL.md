@@ -199,6 +199,8 @@ python3 scripts/android_scan.py <project-root> --route shared-core --format json
 
 1. Apply approved items only, one group at a time; change only what they name.
 2. Build for Apple platforms after each group (`swift build`, or the project's own command).
+   Where a sandbox blocks `swift build`, typecheck the changed files with `swiftc -typecheck`
+   and say which check ran.
 3. Re-run `android_scan.py`; the resolved findings should be gone.
 4. Build for Android where `toolchain_report.py` says it can, or say which CI job will;
    behavior is verified only by tests that ran on an emulator or a device.

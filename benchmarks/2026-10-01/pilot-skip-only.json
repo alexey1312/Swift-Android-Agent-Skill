@@ -1,0 +1,528 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.285",
+  "startedAt": "2026-10-01T17:34:38.269Z",
+  "durationSeconds": 204,
+  "costUsd": 1.8502194,
+  "partial": false,
+  "aggregates": {
+    "casesTotal": 4,
+    "casesPassed": 4,
+    "overallScore": 0.5724157522719436,
+    "overallPassRate": 0
+  },
+  "suite": {
+    "ablation": "none",
+    "threshold": 0,
+    "concurrency": 4,
+    "plugins": [
+      {
+        "name": "skip-official-skills-only",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "architecture--compose-never-updates",
+      "aggregates": {
+        "score": 0.40119760479041916,
+        "passRate": 0
+      },
+      "graders": [
+        {
+          "name": "e01",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e02",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e03",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e04",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e05",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "no-answer-key",
+          "type": "regex",
+          "weight": 0.01
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.40119760479041916,
+            "passed": false,
+            "turns": 5,
+            "costUsd": 0.3093632,
+            "judgeCostUsd": 0.06278199999999999,
+            "durationSeconds": 57,
+            "error": null,
+            "graders": [
+              {
+                "name": "e01",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ]
+              },
+              {
+                "name": "e02",
+                "passed": false,
+                "weight": 1,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ]
+              },
+              {
+                "name": "e03",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ]
+              },
+              {
+                "name": "e04",
+                "passed": false,
+                "weight": 1,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ]
+              },
+              {
+                "name": "e05",
+                "passed": false,
+                "weight": 1,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ]
+              },
+              {
+                "name": "no-answer-key",
+                "passed": true,
+                "weight": 0.01
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "architecture--make-shared-target-android-ready",
+      "aggregates": {
+        "score": 0.6254681647940075,
+        "passRate": 0
+      },
+      "graders": [
+        {
+          "name": "e01",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e02",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e03",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e04",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e05",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "file01",
+          "type": "regex",
+          "weight": 1
+        },
+        {
+          "name": "file02",
+          "type": "regex",
+          "weight": 1
+        },
+        {
+          "name": "file03",
+          "type": "regex",
+          "weight": 1
+        },
+        {
+          "name": "no-answer-key",
+          "type": "regex",
+          "weight": 0.01
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.6254681647940075,
+            "passed": false,
+            "turns": 16,
+            "costUsd": 0.6824631999999999,
+            "judgeCostUsd": 0.15544600000000014,
+            "durationSeconds": 204,
+            "error": null,
+            "graders": [
+              {
+                "name": "e01",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ]
+              },
+              {
+                "name": "e02",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ]
+              },
+              {
+                "name": "e03",
+                "passed": false,
+                "weight": 1,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ]
+              },
+              {
+                "name": "e04",
+                "passed": false,
+                "weight": 1,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ]
+              },
+              {
+                "name": "e05",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ]
+              },
+              {
+                "name": "file01",
+                "passed": true,
+                "weight": 1
+              },
+              {
+                "name": "file02",
+                "passed": true,
+                "weight": 1
+              },
+              {
+                "name": "file03",
+                "passed": false,
+                "weight": 1
+              },
+              {
+                "name": "no-answer-key",
+                "passed": true,
+                "weight": 0.01
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "architecture--route-for-existing-ios-app",
+      "aggregates": {
+        "score": 0.4293865905848787,
+        "passRate": 0
+      },
+      "graders": [
+        {
+          "name": "e01",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e02",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e03",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e04",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e05",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e06",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e07",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "no-answer-key",
+          "type": "regex",
+          "weight": 0.01
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.4293865905848787,
+            "passed": false,
+            "turns": 5,
+            "costUsd": 0.500897,
+            "judgeCostUsd": 0.19145600000000002,
+            "durationSeconds": 102,
+            "error": null,
+            "graders": [
+              {
+                "name": "e01",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ]
+              },
+              {
+                "name": "e02",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ]
+              },
+              {
+                "name": "e03",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  false
+                ]
+              },
+              {
+                "name": "e04",
+                "passed": false,
+                "weight": 1,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ]
+              },
+              {
+                "name": "e05",
+                "passed": false,
+                "weight": 1,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ]
+              },
+              {
+                "name": "e06",
+                "passed": false,
+                "weight": 1,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ]
+              },
+              {
+                "name": "e07",
+                "passed": false,
+                "weight": 1,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ]
+              },
+              {
+                "name": "no-answer-key",
+                "passed": true,
+                "weight": 0.01
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "sdk--dlopen-observation-crash",
+      "aggregates": {
+        "score": 0.8336106489184693,
+        "passRate": 0
+      },
+      "graders": [
+        {
+          "name": "e01",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e02",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e03",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "e04",
+          "type": "llm",
+          "weight": 1
+        },
+        {
+          "name": "file01",
+          "type": "regex",
+          "weight": 1
+        },
+        {
+          "name": "file02",
+          "type": "regex",
+          "weight": 1
+        },
+        {
+          "name": "no-answer-key",
+          "type": "regex",
+          "weight": 0.01
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.8336106489184693,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.35749600000000004,
+            "judgeCostUsd": 0.10744600000000003,
+            "durationSeconds": 79,
+            "error": null,
+            "graders": [
+              {
+                "name": "e01",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ]
+              },
+              {
+                "name": "e02",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ]
+              },
+              {
+                "name": "e03",
+                "passed": true,
+                "weight": 1,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ]
+              },
+              {
+                "name": "e04",
+                "passed": false,
+                "weight": 1,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ]
+              },
+              {
+                "name": "file01",
+                "passed": true,
+                "weight": 1
+              },
+              {
+                "name": "file02",
+                "passed": true,
+                "weight": 1
+              },
+              {
+                "name": "no-answer-key",
+                "passed": true,
+                "weight": 0.01
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

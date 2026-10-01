@@ -29,7 +29,7 @@
         "Explains how compressFile's async function and its progress closure come out on the Kotlin side (for example a CompletableFuture that Kotlin can await, and the limits on bridged closures).",
         "Covers packaging: building the library for each Android ABI with the Swift SDK for Android and shipping the .so files with the Swift runtime (or static linking) and libc++_shared.so in the app's jniLibs.",
         "Mentions R8/ProGuard keep rules for the generated Java classes, or swift-java's Java support library that the app must depend on.",
-        "Warns that swift-java has no API-stability guarantee before 1.0 (so pin a version), pointing at a dated source instead of asserting a version from memory.",
+        "Warns that swift-java has no API-stability guarantee before its 1.0 release, so the version must be pinned; a version it names comes with a dated source (such as the skill's versions reference), not from memory.",
         "No file in the project copy was modified."
       ]
     },
@@ -60,7 +60,7 @@
         "Identifies the ICU data library (lib_FoundationICU.so) and the Foundation and Swift runtime libraries as most of the growth, not the app's own code (libShopCheckout.so).",
         "Proposes linking the Swift runtime statically with stripping and dead-code elimination (and size-oriented flags such as -Osize or LTO), citing swift-java's binary-size guide or a dated report.",
         "Proposes depending on FoundationEssentials instead of full Foundation where the module allows it, while noting that locale-aware price formatting needs internationalization and ICU data, so the trade-off has to be checked.",
-        "Mentions that per-ABI delivery (an Android App Bundle or ABI splits) means users download only one ABI's libraries.",
+        "Covers what users download per ABI: an Android App Bundle (or ABI splits) sends each device one ABI's libraries — or notes that this listing already ships a single ABI, so splitting saves nothing yet.",
         "Keeps reported figures apart from measurements: numbers from other projects are attributed and dated, and the plan says the savings must be measured on this APK.",
         "No file in the project copy was modified."
       ]

@@ -125,9 +125,11 @@ jobs:
         run: swift build --package-path samples/SharedCore --build-tests --swift-sdk "$SWIFT_SDK_ID" --triple "$TRIPLE"
 
       # The article's own end-to-end check, verbatim; it links executables against this row's NDK.
+      # On the image-NDK rows the static link is expected to fail (measured-behavior.md M5): record it.
       - name: Build swift.org's Hello World for Android
         id: hello
         if: ${{ !cancelled() && steps.toolchain.outcome == 'success' }}
+        continue-on-error: ${{ matrix.record }}
         run: |
           cd /tmp
           mkdir hello
