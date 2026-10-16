@@ -27,6 +27,8 @@ into a workflow an agent can follow:
 report what the machine can verify, scan the code, propose a plan where every item cites a source,
 change code only after approval.
 
+**Website:** <https://blog.kakoulin.com/apps/swift-android-agent-skills>
+
 ## Works alongside Skip's official skills
 
 The Skip team publishes [official agent skills](https://github.com/skiptools/skills) for Skip projects:
